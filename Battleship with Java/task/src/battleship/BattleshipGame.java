@@ -76,10 +76,25 @@ public class BattleshipGame {
         int startColIdx = startCol - 1;
         int endRowIdx = endRow - 'A';
         int endColIdx = endCol - 1;
-        int shipLength = 0;
+        //int shipLength = 0;
         if (startRow == endRow) {// A3 , A7
             int minCol = Math.min(startColIdx, endColIdx);//7,3  = 3,7
             int maxCol = Math.max(startColIdx, endColIdx);
+            // Check for adjacent or overlapping ships horizontally
+            for (int j = minCol - 1; j <= maxCol + 1; j++) {
+                if (j >= 0 && j < FIELD_SIZE) {
+                    if (startRowIdx >= 1 && startRowIdx < FIELD_SIZE - 1) {
+                        if (gameField[startRowIdx - 1][j] == SHIP || gameField[startRowIdx + 1][j] == SHIP) {
+                            System.out.println("Error! You placed it too close to another one. Try again:");
+                            return false;
+                        }
+                    }
+                    if (gameField[startRowIdx][j] == SHIP) {
+                        System.out.println("Error");
+                        return false;
+                    }
+                }
+            }
 
             // check if there is no other ship there
             for (int j = minCol; j <= maxCol; j++) {
@@ -94,6 +109,24 @@ public class BattleshipGame {
         } else {
             int minRow = Math.min(startRowIdx, endRowIdx);//
             int maxRow = Math.max(startRowIdx, endRowIdx);
+
+            // Check for adjacent or overlapping ships vertically
+            for (int i = minRow - 1; i <= maxRow + 1; i++) {
+                if (i >= 0 && i < FIELD_SIZE) {
+                    if (startColIdx >= 1 && startColIdx < FIELD_SIZE - 1) {
+                        if (gameField[i][startColIdx - 1] == SHIP || gameField[i][startColIdx + 1] == SHIP) {
+                            System.out.println("Error! You placed it too close to another one. Try again:");
+                            return false;
+                        }
+                    }
+
+                    if (gameField[i][startColIdx] == SHIP) {
+                        System.out.println("Error! You placed it too close to another one. Try again:");
+                        return false;
+                    }
+                }
+            }
+
             // check if there is no other ship there
             for (int i = minRow; i <= maxRow; i++) {
                 if (gameField[i][startColIdx] != FOG_OF_WAR) {
